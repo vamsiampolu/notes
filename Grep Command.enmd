@@ -1,0 +1,60 @@
+__Grep Command__
+
+The `grep` command searches files or the `stdout` if no files are provided for a `pattern`.
+
+Note that short options are used with `-` and longer aliases are used with `--`.The longer aliases cannot be chained together while the shorter options can be chained together.
+
+Options for **matcher selection**.This is essentially to select the kind of regular expressions you would like to use:
+
+|Short Option|Longer Alias|Description|
+|------------|------------|-----------|
+| E | extended-regexp | Interpret pattern as an extended regular expression |
+| F | fixed-strings | a list of fixed strings seperated by newlines,any of which is to be matched |
+| G | basic-regexp | interpret pattern as a basic regular expression |
+| P | perl-regexp | interpret the pattern as a `perl` regular expression |
+
+The option `G` is the default option when using the `grep` command without specifying any options
+
+In `GNU grep` i.e the `grep` implemented by Linux,there is no difference between basic and extended regular expressions.However,it is important to note that one should prefer `PCRE` or `Perl Compatible Regular Expressions` when searching.However,if you prefer either of the other options,note that the `{` and the `}` lose their special meaning in the basic regular expressions when using other platforms like `OS X`.
+
+Options for **matching control**.These provides options about your pattern.
+
+|Short Option|Longer Alias|Description|
+|------------|------------|-----------|
+| e | regexp | Pattern is a regular expression |
+| f | file | Obtain patterns from a file,one pattern per line |
+| i | ignore-case | ignore case distinctions both in the pattern and the match |
+| v | invert-match | select the non matching lines |
+| w | word-regexp | only select lines that match a whole word |
+| x  | line-regexp | select only the matches matched by the whole line |
+
+My feeling on this says that the `f` option is much more powerful when compared to the `F` matcher selection in the first table which I would never want to use.
+
+Options for **output control**.Select what the output should display:
+
+|Short option|Longer alias|Description|
+|------------|------------|-----------|
+| c | --count | print a count of matching lines for each output file |
+| - | --color | display the output in color,specify one of `auto`,`always` and `never`|
+| L | --files-without-match | display all the file names without a match,supress normal output |
+| l | files-with-matches | display all the file names with a match,supress normal output |
+| m | --max-count | only searches for the first n matching/non-matching lines,affects `c`,`v` options,allows resumption of search |
+| o | --only-matching | print only the matched part of a matching line with each result in a newline |
+
+There are two other options,namely `s` and `q`,both of these are to be avoided,instead redirect `stderr` to `/dev/null`.
+
+Options for **output line prefix control**
+
+|Short option|Longer alias|Description|
+|------------|------------|--------------------------------|
+| b | byte-offset| the byte offset within the input file before each line of output |
+| H | with-filename | print the filename with each match|
+| h | no-filename | supresses prefixing of filenames on output |
+| - | label | display input from stdin as coming from a file |
+| n | line-number | prefix each line of output with a 1 based line number |
+| T | initial-tab | make sure first charecter is on a tab stop,useful with options like `H`,`n`,`b`.|
+| u | unix-byte-offsets| report byte offsets as if they were unix style text files |
+Z | null | prints a zero byte after the output instead of a new line,makes the output unambigious|
+
+I like many of the options specified here,I see the power they add to `grep` and am amazed,`H`,`n`,`T` and `Z` are must haves,I would consider adding them to the default options.
+

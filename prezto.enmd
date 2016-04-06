@@ -1,0 +1,8 @@
+Prezto themes need to be downloaded and installed at:
+
+    ~/.zprezto/modules/prompt
+
+I am installing enhancd which provides enhanced cd functionality for my shell prompt.
+The plugin requires the installation of interactive filtering tools such as percol
+and peco in my workflow and those tools,due to their interactive nature are better
+performing and more productive than grep.

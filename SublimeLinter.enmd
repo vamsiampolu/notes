@@ -1,0 +1,141 @@
+---
+title: SublimeLinter
+notebook: vamsiampolu's notebook
+tags:sublimetext3, sublimelinter, docs
+---
+
+**Sublime Linter**
+
+Sublime Linter is a monster:
+
+1. it fixes syntax scope of an embedded language within another language,it modifies `HTML` and similar packages.
+
+2. it modifies color schemes,makes copies of them and switches to that color scheme if the color scheme does not have its colors
+
+3. looks for syntax of a file,gets a lowercased version,checks to see if linters are available and assigns to the linters to the view.if there are multiple tabs of the same file,multiple linters are assigned.
+
+Moral of the story:Do not open multiple tabs of the same file.
+
+4. if a view changes while a linter is running in `background` mode which adds a delay,the request is discarded and a new request is made.
+
+5. if a file/view changes the linter is reassigned to the  view.
+
+
+Moral of the story: keep linting disabled,enable when done making changes,fix each issue...it would be beneficial if we were to enable only one linter at a time.
+
+When all linters finish the error and warning information are added to the code.Each linter calls an external binary library such as jshint.Paths are located on *nix using PATH and any system paths,on Windows,it uses system paths.
+
+**Lint modes**
+
+Sublime Linter has several lint modes:
+
+1. Background
+
+Lint requests are generated for every modification of the view,this is  the default mode,this is rather annoying.
+
+2. Load/Save:
+
+Linting occurs whenever a file is saved or loaded,however you have to turn on `show errors on save` in order to view the errors,this sounds rather promising.
+
+3. Save:
+
+Linting occurs only when a file is saved,this option looks good as well,but I might go with the previous one,OK.
+
+To choose a lint mode,open the `Command Palette`,select `SublimeLinter:Choose Lint Mode` and select the mode you would like to use.This option is also available in `Tools` and `context menu`.Use of the Command Palette is recommended.
+
+Sublime Linter can also be manually triggered by selecting `Lint this View` from one of the locations specified above.Sublime Linter has a lot of Gutter Themes available to it,pick one and start working with it.You can use configurable `Mark Syle`s and `Gutter Style`s
+
+The mark style marks the error in the code with a line,a gutter style marks the location of the error,the actual error is displayed in the statusbar at the bottom.
+
+I have installed the Gutter Themes for SL and used the `Minimal` theme because it seemed rather simple and easy to comprehend.
+
+You can view all errors by opening the `Command palette` and selecting `View all Errors`,it shows the line number and error messages on the first line and code on the second line.An `arrow` is inserted in the position where the error occurs.
+
+To navigate the errors:
+
+Shortcut | Description
+|-----------|----------------|
+|  Ctrl + K,n | Next Error|
+|  Ctrl + K,p | Previous Error|
+|  Ctrl + K,a | Show all errors|
+
+**Settings**
+
+Most of the options available with SublimeLinter are available in the `Command Palette`,however there are certain settings that must be edited from the settings file only.
+
+When SublimeLinter is asked for the value of a setting,it merges values from several settings and obtains the value.The order of precedence is as follows:
+
+1. inline overrides
+
+2. inline settings
+
+3. .sublimelinterrc settings
+
+4. Project settings 
+
+5. User Settings
+
+6. Default Settings
+
+There are different types of settings:
+
+1. Global settings:
+
+defined in default settings,can be overridden in user settings.
+
+2. Linter settings:
+
+specific to the linter,must be specified in the subobject inside linters.
+
+3. Meta settings:
+
+if specified globally,affects every linter,prefer specifying per linter,do not modify these settings at the global level.
+
+User settings can be found at `Packages/User/SublimeLinter.sublime-settings`.
+
+**Project Settings** are defined by the `SublimeLinter` property which is an object within the `Sublime Text project properties.Only meta settings and linter settings are recognized in project settings.
+
+The SublimeLinter looks for the `.sublimelinterrc` within a directory,then going to the parent and it's parent all the way upto the root.Settings in `.sublimelinterrc` must look no different from the settings usually found in `user` settings.The `rc` file can only be used to set `meta` settings and `linter` settings only.
+
+Inline settings:
+
+Inline settings must appear on the first two lines of the file,they must be structured in the following manner:
+
+	_comment_ [SublimeLinter _linter_-_setting_ : _value_] _comment_
+
+The spaces in the above are mainly for the purpose of illustration,do not take them to heart.
+
+`comment` represents the comment in the language,the words sublimelinter are not case sensitive,the linter's name must be specified in lower case.The setting and the value must be specified,any amount of whitespace must be placed before/after the `:`.Otherwise,unnessecary whitespace is forbidden,whitespace is used to delimit settings.
+
+Each linter has its own settings which can be overridden using `Inline Overrides` functionality.
+
+**Settings tokens**
+
+SublimeLinter iterates over project and user settings,replacing the tokens with the corresponding values:
+
+|Token|Description|
+----------|-----------------------------------------------------|
+| ${project} |  full path of project's parent directory,if available|
+| ${directory}| full path to the parent directory of the current view|
+| ${home}| full path to the current user's home directory|
+| ${env:x}| the environment variable x|
+
+**Global settings**
+
+The `paths` setting is interesting,it can be used to provide paths to settings on various operating systems.
+
+	{
+		"paths": {
+			"linux":[],
+			"osx":[],
+			"windows"
+		}
+	}
+
+**Meta settings**
+
+The `@disable` setting can be used to disable a linter(if used as a linter setting) or to disable linting entirely.
+
+**Linter settings**
+
+Each linter will have its own settings,no point discussing them here.

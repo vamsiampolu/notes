@@ -1,0 +1,47 @@
+How do I want to run nodejs applications,should I just go beyond
+the promises,callbacks debate and skip straight to FRP using rxjs
+because they work with both promise and callback based libraries.
+
+And it obviously works both on server and client,so is it time to
+make my workflow on node much smoother?
+
+For example,I have spent days trying to figure out lost errors when using
+callbacks in Node,I have written millions of console.log statements,I have
+tried various configurations of working with node-inspector,seeing it fail,
+seeing the UI go into a wierd state and so on.I have spent many days trying 
+to figure out how to promisify mongoose,all I want is a simple workflow which
+will allow me to be highly productive even without a framework.
+
+We will discuss a no framework zone later,however I want to cut the crap and
+use a simple,functional tool that works with modules that have been built with
+both callbacks and promises.
+
+Also,avoid all build tools,you either use makefiles or npm scripts directly,
+the problem is that you have so many dependencies that it becomes crazy...
+just use the command line tools within npm.
+
+My focus will be using:
+
+	
+	Rx,React,lodash et al.
+
+with npm being the build tool,I prefer using jspm to browserify because
+it can:
+
+1. install modules from several sources such as npm,bower,github
+
+2. install different types of modules and shim them automatically
+   with a lot less configuration and an auto generated manifest
+
+3. can load any module format using Systemjs,also acts as a polyfill
+   for the Systemjs API which has not been built yet.
+
+4. allows writing code in any module format and pulling in other modules using
+   your module system of choice regardless of which system the module was 
+   written in.
+
+5. has support for AMD loading(good for SPDY) and bundling which is good for
+   loading minified files.
+
+6. allows you to use a transpiler with client side code
+

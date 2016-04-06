@@ -1,0 +1,778 @@
+**Linux Guide**
+
+Always login with a user account,especially while you are logged in graphically,because logging in as root requires a lot of permissions to run various graphical applications.Only log in as the root account when extra privileges are required.
+Terminal prompt has `user@host`.To change the password of the current user:
+
+	passwd
+
+To see the type of a file,use:
+
+	file filename
+
+A few BASH shortcuts:
+
+|Keyboard Shortcut|Description/Action Performed|
+|-----------------|-----------------------------|
+|  Ctrl + A       |   move cursor to beginning of command line|
+|  ctrl + C       |  end a running program and return to prompt|
+|  Ctrl + D       |  logout of your shell,same as using `exit` command|
+|  Ctrl + E       |  move cursor to the end of command line|
+|  Ctrl + H       | generate backspace key|
+|  Ctrl + L       | clear the terminal|
+|  Ctrl + R       | search command history|
+| Ctrl + Z        | suspend a running program|
+| Shift + PageUp  | scroll up to use content that has scrolled off screen|
+| Shift + PageDown| scroll down to see content buffer that has scrolled off screen|
+| Tab             | Tab is used for text completion|
+| Tab Tab         | this is used to show a list of all possibilities|
+
+
+
+GNU/Linux is all about becoming self-reliant.The Linux community is very helpful,it expects people to have atleast tried some of the common methods before one deciedes to use their help.To use the inbuilt help,ensure that you become familiar with the `man` and info pages.
+
+**man pages**
+
+Man pages scare away rank beginners,but they are really friendly and well structured.To checl out the documentation for man type:
+
+	man man
+
+Like all Unix/Linux/GNU tools it has several options...figure that out yourself.Anyways,press Space to go to the next page,to go back press the `b` key.To exit,press the `q` key.How you interact with the `man` page depends on the `pager` used.
+Most distributions use the `pager` called `less`.
+
+Most man pages are very clearly structured.They contain:
+
+1. title: which is the name of the command and the id of the section.this is followed by a short description.
+
+2. `synopsis` provides a technical notation of how to use all the options with the command,optional options and arguments are put in between `[]` to indicate that they can be left out.
+
+3. A longer description of the command is provided
+
+4. Options are described in detail,usually short options can be combined,if not this section informs you about it.
+
+5. Environment describes the shell variables that influence the behaviour of this command.
+
+6. Command specific sections are also provided
+
+7. There is a `SEE ALSO` section,this will take you to related man pages,to switch to relevant `man` pages.
+Experienced users will switch to the see also section using the `/` command followed by the `SEE` as a search string.
+
+In addition to the `man` command,`Linux` also has an `info` command to browse the documentation.While in the info reader program,`P` will take you to the next subject and `N` will take you to the previous subject.`Space` will take you one line ahead regardless of topic.In addition to these there is a `whatis` command and an `apropos` command.The `whatis` command produces a short description of the command,mostly from the first section of the man page,it is very terse and extremely spartan. If you have no clue what to do,then the apropos command is for you.Also,each command comes with a `help` option which can be used to browse a short documentation.You have a lot of help available on hand,use it wisely.
+
+Some commands do not have a documentation because they are part of another command or because they are shell built ins,in that case read the documentation for the shell you are using.
+
+**Linux File System**
+
+Everything in Linux is a file,this is the UNIX philosophy and Linux sticks very closely to it.There are some things that are a little more than files but this is an acceptable generalization.There are certain types of files that the long list can help you identify:
+
+|Symbol|Name|Description|
+|------|-----------|----------------------------|
+| - | Regular file| Our bread and butter,a simple file|
+| d | Directory| A file containing a list of other files|
+| c | Special File| mechanism for input and output,mostly in /dev folder|
+| l | Links| System to make files visible in multiple locations at the same time|
+| s | Sockets/Domain| Provides inter process communication,protected by file system's access control,like TCP/IP|
+| p | Named Pipe| Provides inter process communication,does not use network socket semantics|
+
+To avoid long listing your files,most often `ls -F --colors` is used,it prefixes the file with an identifier amongst `/=*|@`.The authors of the book will use this format.
+
+**Partitioning**
+
+Partitions are meant to provide data security and avoid failure when a disk gets filled up.There are two kinds of partitions on linux:
+
+1. data partition 
+
+includes root partition,contains all data to start up and run the system.
+
+2. swap partition
+
+expansion of the computer's physical memory,additional memory on hard disk
+
+Most Linux utilities use `fdisk` to partition the file system when installing themselves,by default partition `82` is for `swap` and partition `83` for data which can be journaled.
+
+Swap acts as an additional memory for when something heavy is going on,the idea of the swap has become popular outside Unix too.
+
+|Partition|Description|
+|------|-------------------------------|
+| /boot| Contains the kernal and accompaning data files|
+| /home| Contains the user's personal data|
+| /usr| Contains all the user's programs|
+| /opt| Contains installed 3rd party software|
+| /var|Contains temp data like print and mail queues| 
+
+All partitions are attached to the system via `mount points`,usually they are linked together using the `root` partition.
+On this partition empty directories are created,they are the basis of the mount points attached to them.
+
+In order to mount a removable storage medium,ensure that the /opt/media folder exists,use the `mount` command and now you see that the removable storage has been mounted.Preferably,/opt/media should be empty.
+
+When the system starts up,the partitions are mounted as specified in `/etc/fstab`.Some partitions are not mounted by default if they are not constantly connected to the system,it can configured to ensure that they are mounted as soon as they are connected.
+
+To check the disk information,use `df -h` where `df` stands for `disk free` or `disk full` and the `-h` stands for `human readable`.
+
+For conveniance,the Linux file system can be thought of as a tree,although in reality that is not the case.Here is a list of all the partitions and what they mean.
+
+Here,you will find a list of the most important mount paths in [Linux](evernote:///view/27208873/s218/477d30c5-0afb-4d60-aec1-24c7875e1d3b/477d30c5-0afb-4d60-aec1-24c7875e1d3b/)
+
+For more info about `proc` and the meaning of various files within `proc` take a look at man proc or proc.txt for more. info.All `log files`,`printer spooler area`,`mail queue` and the any `files being downloaded from the internet` are stored in `/var`.As a general rule,almost every directory is on the root directory unless they have a seperate partition under the `df - h ` command.To learn more about this,go read `man heir`.
+
+**Inodes**
+
+Each file in the file system is represented using `inodes` which consist of some meta information about the `file` including `contents`,`ownership` and location on the physical disk.When a partition is initialized,it is done so with a fixed number of `inodes` which determine the amount of storage in the partition.Each `inode` describes a data structure.
+
+Whenever a new file is created,it gets an `inode` for free,the `inode` contains information about:
+
++ owner and group owner
++ file type
++ permissions on the file
++ date and time of creation
++ number of links to this file
++ file size
++ address defining the location of file data
+
+An inode has no information about the `file name` and the `directory`,these are stored in special `directory files`.
+They are used in tandem with `inode`s to create a tree representing the file system which the user can understand.
+In order to view `inode`s,use `-i` options in the `ls`.`Inode`s have their own storage space on disk.
+
+**Path**
+
+To check the full path of a command,use
+
+	which -a ls
+
+The `PATH` variable enables you to execute commands without knowing or having to memorize their full paths.The PATH can be viewed using:
+
+	echo $PATH
+
+When searching for the location of a program on the path,search is stopped as soon as a match is found,if no match is found,the command will not be executed.Sometimes,the path for one of the users might be configured correctly but it might be misconfigured for other users.In such case,you could use the `su` or `switch user` facility to execute the program as a different user as long as you know their `password`.
+
+If a program is missing or misconfigured you can change the `PATH` environment variable to do this.
+
+	export PATH= some_path.
+
+Note: all the changes you make to your path using `export` are temporary,to make those changes permenant you have to modify the runtime configuration of your shell.
+
+**Important files and directories**
+
+1. **Kernal**
+
+The kernal is the heart of the file system,it manages communication between hardware and peripherals.It ensures that processes and deamons are started and stopped correctly.The kernal has to perform lots of important tasks,it has its own mailing list.
+
+2. **Shell**
+
+The shell is a really really powerful entity which you must use in order to communicate with the computer,to find your shell use:
+
+	echo $SHELL
+
+You can configure the shell you use in `/etc/passwd`.
+
+If you have multiple shells installed,to switch from one shell to the other,just type the name of the shell:
+
+	zsh
+
+Or,you could switch to `xiki` using:
+
+	xsh
+
+3. **Home**
+
+> There's no place like home
+
+You can put whatever you like in your `HOME` directory,it belongs to you,you can use all the programs available to you and add any new programs here.You have total control of your home directory,it is represented by `~`,it is usually located in the `/home` directory,however depending on your distribution and how you are using your OS,it could be located elsewhere.
+
+To find out where your `HOME` directory is located,go to the terminal:
+
+	echo $HOME
+	// => /home/vamsi
+
+The `system administrator` might impose certain limitations on the amount of disk space you have access,to check this,run:
+
+	quota -v
+
+**Configuration files**
+
+Some of the most important configuration files are located inside `/etc`,the configuration files are well commented and easy to understand,some of these files also come with man pages.
+
+It is a common practice to run a mail server on each and every os installation,each install could potentially come with a mail server such as `Postfix` or `Sendmail`.
+
+If your shell were different from `BASH`,its config would be stored inside `/etc` or in your home directory using an `rc` file.
+
+User groups can be added and removed manually using `groupadd`,`groupmod` and `groupdel`.Do not edit them manually unless you really know what you are doing.Similarly,use `useradd`,`usermod` and `userdel` in order to edit the list of users in `/etc/passwd`.
+
+Here is a list of all the important file paths in [Linux Configuration Paths](evernote:///view/27208873/s218/122b87f8-fc3f-486b-ad24-4f427ef3e8d7/122b87f8-fc3f-486b-ad24-4f427ef3e8d7/)
+
+**Peripherals**
+
+All peripherals are listed with an entry in the `/dev` directory,here is a list 
+of few commonly occuring devices:
+
+[Linux Device Names](evernote:///view/27208873/s218/fb7d4f15-4b57-41de-a07a-188588067882/fb7d4f15-4b57-41de-a07a-188588067882/)
+
+**Temporary files**
+
+The temporary files are stored in the `/var` folder,this folder is kept seperate from the rest of the file system and has more liberal security permissions.
+
++ /var/tmp
+
+A folder which should be used by users to store temporary,this is recommended.
+
++ /var/log
+
+The `syslog` deamon determines what to log and where to log it,by default it uses the this
+folder.
+
++ /var/ftp
+
+The `ftp` can be used by almost anyone,thus it is safe to keep away from regular file system
+
++ /var/www
+
+Contains all the `html`,`scripts` etc that a server contains.
+
++ /var/spool/*
+
+	1. at
+
+	2. cron
+
+	3.mail
+
+The first two directories are used to specify scheduled tasks,all incoming mail for local users is stored in the third.Also,there might be an `lpd` folder for use with print queues.
+
+Package managers such as `rpm` and `apt` also store their data somewhere within `var`.
+
+**Commands**
+
++ ls
+
+Or,as little about ls as possible,to find out more `RTFM`.
+
+To view hidden files also with `ls`:
+
+	ls - a
+
+To view all files as a long list:
+
+	ls -al
+
+To view all files by the reversed order of their last modified:
+
+	ls -latr
+
+Usually ls uses the colors specified in `/etc/DIR_COLORS`,this is aliased to `colors-ls`.
+
+The default ls colors are:
+
+|Color|File type|
+|----|----------|
+| blue| directories|
+| red| compressed archives|
+| white| text files|
+| pink| images|
+| cyan| links|
+| yellow | devices|
+| green| executables|
+| flashing red| broken links|
+
+For `mono color` use and for general readability,linux uses suffixes
+
+|Suffix|File type|
+|------|---------|
+| nothing| regular file|
+| `/`| directory|
+| `*`| executable|
+| `@`| link|
+| `=`| socket|
+| `|`| named pipe|
+
+Also,try `info coreutils ls` to find out more about this.
+
++ file
+
+`file` is a command that makes an educated guess about your file format based on a few different parameters,this is not absolute,you can trick this command.
+
+The author would like to point out that a lot of noobs are impressed by file managers such as `Nautilus` or `konquerer`.
+
++ mkdir
+
+You can use `mkdir` to create directories,to create directories and sub-directories in a single step,use it like this:
+
+	mkdir -p 2001/Space/Oddessy/By/Stanley/Kubrick
+
++ mv
+
+The `mv` command is used for moving and renaming files.
+
+Even experienced Linux users frequent the documentation very often,so donot hesitate to visit the man page,slowly all the stuff is being centralized into the `info` pages.
+
++ rm
+
+Use rm to remove files, to remove empty directories use `rmdir`,there are several dangerous options to remove non empty directories.There is a trash can for graphical use but it is not available when using this command,so one has to be really careful when removing files.
+
+> Note that directories with `.` and `..` cannot be removed even if they are empty because they are essential for determining the ranking of folders in the folder heirarchy.
+
++ cp
+
+Use cp to copy files,this might give you a bunch of errors because you did not have the nessecary permissions.To copy all the underlying files and folders use `-R`.
+
+To ensure that people do not shoot themselves in the foot,commands like mv,cp,rm have an `i` option to add interactivity.
+
+The shell can accomplish replacements using the `[]` syntax,I am told that it is equally capable of replacing numbers,lowercase and uppercase charecters.
+
++ which
+
+`which` is used to locate files on the user's search path,only executable programs are listed on the search path.
+
+You can use it to resolve command not found issues and to figure out if a command is an alias of another command.
+
+	which -a ls
+
++ find
+
+`find` is a tool from Unix,it is rather powerful,it can search using path,size,date of last change and other file properties.You can also perform operations on the found files using `find`.
+
+	find . -name *.tmp -size +5000k
+
+	find . -name "*.tmp" -exec rm {} \;
+
+This will call `rm` as many times as it needs,maybe a few million times,this is quite a load on the system,be realistic and use a pipe with `xargs` and `rm`.
+
++ locate
+
+This command was developed 20 yrs after find,based on a file index database 
+updated once a day,uses fewer resources.
+
+How can I maximize and minimize a window without the mouse?
+
+To activate the menu of a window,use `Alt + Space`,to maximize and minimize the window,use `Ctrl + Super  + Up` and `Ctrl + Space + Down`.
+
++ grep
+
+Grep is a powerful command used for filtering input lines and returning data to the output line.For example,here we use `grep` to figure out how we are doing things with `find`.
+
+	grep find bash.history
+
+Your shell also comes with a search functionality which can be used to search for commands that you previously typed in,the more you type in,the more restrictive your query becomes,this can be activated using `Ctrl + R`.
+
+For more info,`read the man pages` on `bash`.
+
+**Special Charecters**
+
+The escape sequence in `bash` and many other shells is `\`,the shell also knows quite a bit about stuff such as `*` and several other charecters.An example of escaping charecters is:
+
+	less \*
+
+This performs this operation on a file named `*` rather than performing it on all the files.Similarly,when there is space in a file name,you can escape it using the `\` charecter.
+
+	cat `My\ Neighbour\ Totoro.txt
+
++ less
+
+There were several programs which can be used to output text to the `stdout`:
+
+  1. cat output could not be controlled
+
+  2. pg puts text to the output one page at a time,found in UNIX
+
+  3. more is a version of pg
+
+  4. less is an improvement over more,includes highlighting,pagers,scrolling back etc.
+
+You can use `less` like this:
+
+  less isMore.txt
+
++ head/tail
+
+A command used to display first/last `n` lines from the top and the bottom respectively.
+
+	head -10 xyz.txt
+	tail -10 xyz.txt
+
+**Links**
+
+1. Hardlinks
+
+When you hardlink two files,they share the same `inode`,i.e changes to one of these files will cause changes to the second file.Otherwise,they exist as simple files.
+
+Hard links cannot span partitions,because the `inode` is unique only within the partitions,which makes `softlinks` also known as `symlinks` more popular.
+
+2. Symlinks
+
+A `symlink` is also known as a `softlink` or a `symobliclink`,this is used to link two files which may span partitions by using the path of the target file in the file which acts as a `symlink`,the `symlink` becomes useless if the target file were to be deleted.
+
+In principle,each file is a `hardlink`.
+
+To create a `symlink`:
+
+	ln -s target_file src_file
+
+Symbolic links are of very small size while hard links are the exact size of the file.
+
+Symlinks are used for(a few of the many advantages of using symlinks is listed here):
+
++ save disk space
+
++ make a copy of the file in order to satisfy installation requirements
+
++ used to fix scripts that have to run in a new environment.
+
+Before discussing permissions,one has to be aware of one's `uid` in order to look up permissions using `ls`.If you do not know your `uid` run:
+
+	id
+
+**Changing file permissions**
+
+First,an introduction to [Unix file permissions](evernote:///view/27208873/s218/f22eb217-e4c1-4644-a9ae-a32e64875e65/f22eb217-e4c1-4644-a9ae-a32e64875e65/)
+
+Now,most newbs using `linux` have complaints such as `access denied` and solutions such as `i can only work on this as root`.The solution to all such problems is to use `chmod`.
+
+**chmod**
+
+chmod is a utility to modify file permissions,it works with alphabetical file permission configuration or with equivalent numerical one.When using `chmod`,the `+` and `-` are used to grant and deny permissions respectively.
+
+These are used in conjunction with the `users` selector,which uses the following charecters to represent various `users`:
+
+|Code|User|
+|----|--------|
+| u | The user who owns the file |
+| g | The other users in the file's group|
+| o | Other users not in the file's group|
+| a | All users|
+
+An example:
+
+	nano hello
+
+Make hello a shell script:
+
+	#!/bin/bash
+	echo "Hello, World"
+	./hello
+
+This will give you a `permission denied error`,fix this by adding the execute permission for the user which would be of the form `u+x`:
+
+	chmod u+x hello
+
+Execute the shell script and proceed forward.
+
+A few common shell script configurations are listed in:
+
+[Common chmod configurations](evernote:///view/27208873/s218/25402381-a858-4a68-b99f-22ad7039105c/25402381-a858-4a68-b99f-22ad7039105c/) 
+
+**User Groups**
+
+When you type the `id` command,you obtain a list of all the groups you could belong to.However,you can actively be a member of only one group at any given point.You get assigned to the `active` or the `primary` group using `/etc/passwd` group.In this file,the fourth field for the user represents the `groupid`.A list of all the groups can be found at `/etc/group`.
+
+On most linux systems,each user is assigned to what is known as a user private group which uses the same name as the login.
+
+However,a user can log in to some of the other groups such as `users` or `web`,when he creates files after changing group,those files would then be owned by the group,this is done by using `newgrp` to login to a group,use `gpasswd` to set up the password for the group.
+
+** File mask **
+
+When a file is saved,default permissions are set for accessing a file,these permissions are determined by the `umask` command.Each UNIX like system has a function for creating new files and directories,this function grants the following permissions:
+
+|Type|Permission|
+|-----------|-----|
+| Directory| 777|
+|File|666|
+
+When creating a directory,the function grants read,write and execute permissions to everyone,when creating a file,execute permissions are omitted everywhere.
+
+The file mask instead of being added to symbolic values must be substracted from symbolic values,the default value is usually `002`.
+
+So for a directory:
+
+	 777
+	-002
+	-----
+	 775
+
+And for a file:
+
+	 666
+	-002
+	----
+	 664
+ 
+The `root` has a much stricter `umask` value of `022`.The system wide values are set using `/etc/profile` or `/etc/bashrc`.
+
+** chown and chgrp **
+
+When a file is owned by the wrong user or the wrong group,one uses `chown` and `chgrp` to change the ownership.Note that `chown` can be used to change both owner and grp while `chgrp` can only be used to change group ownership.
+
+An example using `chown` to make a file private for a user:
+
+	chown vamsi: index.js
+	chmod o-r index.js
+
+To share this file without giving everyone permission to write to it:
+
+	chgrp project index.js
+	chmod o= index.js
+
+This gives everyone within the group a chance to work on the project.
+
+These two utilities have the ability to change  user and group ownership recursively using the `-R` option.
+
+** Special modes **
+
+1. Sticky bit mode:
+
+Originally intended to keep commands in memory to allow loading a large job only once and proceed to use it repeatedly,the present meta is to use it on directories.When applied to a directory,it means that a file cannot be modified unless the user is the owner of the file or the file has appropriate permissions.
+
+In `ls -l`,directories with sticky bit enabled have a `t` at the end of their file permissions.To add the sticky bit mode to permissions,use `chmod`:
+
+	chmod o+t filename
+
+2. SUID and SGID:
+
+Represented by `s`,when applied to an executable,it runs with the permissions on the file instead of those of the issuing users,thereby providing access to system resources.
+
+3. SGID:
+
+every file created in a directory would have the same group owner as the directory enclosing them.This means that users can share directories with one another without having to worry about file permissions.
+
+This is the standard way of sharing files on `UNIX` systems.
+
+Files that were created elsewhere but have been moved to an `SGID` will be left unchanged.
+
+___
+
+__Processes__
+
+Linux is based on `UNIX` where it is common policy to allow multiple users to run multiple commands at the same time.
+
+There is support for:
+
+1. switching between processes
+
+2. processes running even when the user logs out
+
+3. re enabling interrupted processes
+
+Types of processes:
+
+1. Interactive processes:
+
+Processes can either run in the `background` or in the `foreground`,if a process required user interaction it would have to be run in the foreground.
+When a process can be run in the background,the user is free to do other things.
+
+There is a feature in the shell known as `job control` which allows you to start processes in the background and switch between processes.
+
+To run a command in the background add a trailing ampersend to the command,to view a list of commands running in the background use `jobs`.
+
+| Command | Description|
+|----------|------------------|
+| command | runs a command in the foreground |
+| command &| runs a command in the background |
+| jobs | show commands running in the background |
+| Ctrl + Z | suspend(but not terminate) a process running in the foreground|
+| Ctrl + C | terminate a process running in the foreground |
+| %n | an expression used to refer to a process running in the background by its number |
+| bg | reactivate a suspended program in the background |
+| fg | put a job back in the foreground |
+| kill | end a process |
+
+2. Automatic processes:
+
+Not connected to the terminal,performed automatically:
+
+  1. at a particular date/time using the `at` command
+
+  2. when system load is low enough using `batch` command
+
+Queued into a spooler area and are executed in a `FIFO` style.
+
+3. Deamons:
+
+Processes that run continously in the background, mostly initialized on system startup and wait in the background until their services are called for.
+
+> An example of this is `xinetd` or the network deamon,this is initialized on system startup,it just sits around until a client program is willing to connect to it.
+
+The `ps` command provides you with a set of process charecterstics:
+
+In the table below,`PID` is `Process ID` and `PPID` is `Parent Process ID`.
+The `process priority` is computed based on the `Nice nummber`.
+
+|Charecterstic| Meaning|
+|-----------|-------------------------------------|
+| ID or PID | A unique identification number used to identify processes |
+| PPID | The PID of the process that started this process|
+| Nice number| The degree of friendliness this process has for other processes|
+| TTY | the terminal to which this process is connected |
+| RUID | the user issuing the command |
+| EUID | the user controlling access to system resources |
+
+Usually,`RUID` and `EUID` are just the same...for example,the process mozilla:
+
+	mozilla &
+
+is owned by root,but it has been started by a user called `Theo`,the access to system resources is determined by `Theo`'s permissions and not `root`'s permissions,thus making `Theo` both the `RUID` and the `EUID`.
+
+** Displaying process information **
+
+Process information can be visualized using `ps` command. There could potentially be hundreds of programs running on a system,use `grep` to obtain information about a particular process.
+
+	ps -ef | grep username
+
+	ps auxw | grep bash
+
+`ps` only provides momentary access to the process state,`top` gives you a more precise state by updating the result of running `ps` every `5 sec`.
+It also generates a list of processes generating a heavy load using the `proc` file system.The first line of `top` contains the same information displayed by the uptime command.
+
+The relationship between processes can be established using `pstree` command.
+The `-u` and `-a` command provide additional information.
+
+** Life and death of a promise **
+
+A new process is created because an existing process makes a copy of itself with a different process id.This is known as `forking`.After forking,address space of `child process` is over written with the new process data.This is done using an `exec` call to the system.
+
+Even the first process `init` with ID `1` is forked during the boot procedure in the so called `bootstrapping` phase.
+				
+				FORK
+	init(PID 1)------> init(PID 342)
+						|
+			EXEC		|
+					   	|
+					   \_/
+					  login(PID 342)
+
+There are many cases in which the `init` process becomes the `parent` of another process.This occurs because a lot of processes `deamon`ize their child processes so that they can keep running when the `parent` stops or is being stopped. Once the `deamon`ized child process is up and running,the parent process denies any responsibility and passes it to `init`. A process might complete while the parent does not wait for the completion of the process,such a process is known as a `zombie process`.
+
+When a process ends normally,it sends an exit status to the parent process,the exit status is program specific and is used to display results to the user.
+In `grep`,the exit status of `-1` means `No files found`,there is a utility called `true` whose purpose is to return an exit status of `0`.
+
+Processes are killed because they recieve a signal,to see the list of all the kill signals,use:
+
+	kill -l
+
+Most signals are for internal use by the system or for programmers as they write code,as an end user,you will need the following signals:
+
+|Signal|Signal Number|Description|
+|---------|---|----------------------|
+| SIGTERM | 15 |Terminate the process in an orderly way |
+| SIGINT| 2 | Interrupt the process,can be ignored by the process |
+| SIGKILL | 9 | Interrupt the process,this signal cannot be interrupted. |
+| SIGHUP | 1 | For deamons:reread the configuration file |
+
+**SUID and SGID**
+
+The SUID and SGID commands are special modes that allow you to access files that you would not normally have the permission to access or use.Hence,they are used sparingly to avoid exposing sensitive information to the general population.
+
+`SUID` needs to be used in some cases,a classic example is when one needs to modify the password,you would need to edit your details in the `/etc/passwd` file,only root has write access to this file.
+
+In order to accomplish this,the `passwd` utility allows for the use of `SUID` to execute the file with the same permissions as `root`.
+
+`SGID` occurs less commonly because it would require the creation of a group,an example of this is `write` and `wall` which have the ability to write to another user's terminal,this is usually disallowed,so they create a group which owns all the terminals.The commands can then be run using the group's permissions.
+
+To see who is connected,use
+
+	who
+
+To see who can accept messages from others use:
+
+	who -w
+
+To send a message,write:
+
+	write "Hello,world!"
+
+To avoid recieving messages from anyone but the system administrator,use
+
+	mesg
+
+** Boot process,init and shutdown **
+
+Linux has a very open way of starting and stopping the operating system,it loads particular programs with their specified configuration(which can modify) and shuts down in a graceful way.
+
+** Boot process **
+
+1. processor looks at the end of system memory for BIOS
+
+> BIOS stands for Basic Input Output,written into permenant read only memory,
+  provides the lowest level interface to peripheral devices
+
+2. BIOS looks for MBR
+
+> When BIOS loads it tests the system,looks for peripherals,looks for a drive which can be used to boot the system.Once Linux has been installed,BIOS looks for MBR(Master Boot Record) on the first sector of the drive.
+
+3. MBR loads GRUB
+
+> MBR contains information for loading and configuring GRUB,control is passed off to GRUB...
+
+4. GRUB finds the boot file
+
+> GRUB finds the boot file of the selected operating system and loads that operating system.
+
+This process is known as `direct loading`,other operating systems such as DOS or Windows use `chain loading` which uses the MBR to point to the first section of the bootable disk where it finds the special files required to load the operating system.
+
+Windows overwrites the `MBR` without respecting the current `MBR` configuration... 
+
+> GRUB supports both methods of loading operating systems,it can load almost  any OS,use any file system and almost any hard disk your `BIOS` can recognize.
+
+`GRUB` provides a configurable,pre-os enviroment where you can load your os with certain config or gather more information about your operating system...
+The configurating file is read from memory every time you boot the OS,thus negating any need to overwrite the MBR...
+
+** init **
+
+kernel finds `init` inside `sbin` and loads it.when init starts,it automatically becomes the parent and the grandparent of every task on your system,
+
+  1. init reads the `/etc/inittab file
+  
+  > takes care of everything the system might need,describes how the system should run at each run level and sets the default runlevel...
+
+  2. init looks up the rc config for your runlevel and runs all of their kill scripts with a stop(a kill script is a specific group of file starting with k)
+
+  3. runs all the start scripts(specific files which start with S) within appropriate runlevel directory to ensure that everything starts correctly.
+
+  You can manually execute some of these deamons as a root user after system startup using `/etc/init.d`.
+
+
+Although `init` looks stuff up inside the `/etc/rc{X}.d` folder,the files located there are symlinks to files in `/etc/init.d`,this is to ensure that rc files can be added or deleted without affected the actual files.
+
+The ordering of rc files is done using their filenames,to change the order in which these services run,change the filenames,a service can be started multiple times,services can be started,one after the other by using the same numerical priority,in this case alphabetical order is used to determine which file gets executed first...
+
+After `init` has progressed through the run levels,it starts up `getty` for the virtual console,it can then be used to setup upto 6 virtual consoles.
+
+`/etc/inittab` also has information on what should happen when a power failure occurs or when `Ctrl + Alt + Delete` is pressed.
+
+On most graphical login systems,the runlevel of `5` is used,this launches the preferred `X display manager`.Some prefer using the `/etc/X11/predfm`(Redhat),Debian based systems take it from the `/etc/X11/default-display-manager`
+
+Also,`/etc/default` and `/etc/sysconfig` can contain a load of stuff that is loaded at boot time.
+
+Runlevels:
+
+| No | Description |
+| 0 | Halt |
+| 1 | Single user mode |
+| 2 | Multiuser without NFS |
+| 3 | Full multiuser mode |
+| 4 | unused |
+| 5 | X11 |
+| 6 | reboot |
+
+Do not set initdefault to either runlevel 0 or 6,also you can configure any unused runlevels as you see fit.
+
+If your machine will not let you boot because of a bad /etc/inittab or a bad /etc/passwd file,boot into single user mode.
+
+When you are booting in text mode,typically no graphical login is presented.You can switch to console 7 or up to be presented with a graphical login.If this is not the case,you can check:
+
+	who -r
+
+to figure out if the run level is set to a value which is not the original default in `/etc/inittab`,chances are the system does not start in graphical mode by default.
+
+Switching between runlevels is typically done using:
+
+	telinit
+
+Switching between text and graphical modes does not involve a run level switch.
+
+The `chkconfig` and `update-rc.d` may provide a simple way of maintaining the init configuration.If a system uses ntsysv,prefer that to `chkconfig`.
+
+These tools are meant for sysadmins and are to be used to maintain init.d heirarchy because it is much easier than dealing with tons of symlinks within each runtime configuration.
+
+** Shut down **
+
+> Unix was not made to be shut down,if you really must use shutdown,prefer using it with the `-h` option to shutdown or `-r` to reboot the system.
+The reboot and halt commands can now invoke the shut down utility.
+
+Wait for a message specifying that a machine was shut down to give the system time to unmount all partitions. 

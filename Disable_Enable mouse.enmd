@@ -1,0 +1,13 @@
+To enable and disable the mouse,use:
+
+	xinput list
+
+to find the list of input devices,then use this:
+
+	xinput set-prop _id_ "Device Enabled" 0
+
+to disable the mouse,if you need to re-enable your mouse,when you are not in a programming environment,use:
+
+	xinput set-prop _id_ "Device Enabled" 1
+
+This will prevent you from accidentally moving your mouse to various different locations when you are typing,because the `Disable when typing` seems to have some glitches with my stuff,although I would like to bind a system shortcut in order to accomplish this.

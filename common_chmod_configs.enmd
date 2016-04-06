@@ -1,0 +1,24 @@
+---
+title: Common chmod configurations
+notebook: vamsiampolu's notebook
+tags:linux, productivity
+---
+
+**Commonly used `chmod` configurations**
+
+1 Execute
+2 Write
+4 Read
+
+|Config| Description|
+|------------------|---------------------------------------------------------|
+|chmod 400 file| Read only,prevents accidentally overwriting the file|
+|chmod 500 directory| Prevents renaming,moving or deleting this file from this directory|
+|chmod 600 file| File is privately accessible only to the user who entered this command|
+|chmod 644 file| A publicly readable file which can be changed only by the issuing user|
+|chmod 660 file| Only users belonging to the group can change this file|
+|chmod 700 file| Protects file from access by any other users while the issuing user still has full access|
+|chmod 755 file|File is readable and executable for all,but is only writable by the issuing user|
+|chmod 755 directory|Files in this directory are accessible to all users but is only available for writing for the issuing user|
+|chmod 775 file| Standard user group file sharing mode|
+|chmod 777 file| Everyone can do everything to this file|

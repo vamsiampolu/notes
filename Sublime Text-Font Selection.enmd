@@ -1,0 +1,21 @@
+**Good Programmer Fonts**
+
+You can modify the font in Sublime Text using the `font_face` property,as always make sure to modify the `User Settings` instead of the `Default Settings`.
+
+To install fonts,you can either copy the fonts to the `.fonts` directory in `Ubuntu` or install the `font-manager` package using:
+
+	sudo apt-get install font-manager
+
+For programming,one should prefer monospaced fonts for readability.These are some of the most popular programming fonts:
+
+1. Fira Mono
+
+2. Adobe Source Code Pro
+
+3. Inconsolata
+
+4. Liberation Mono
+
+If you are on `Windows`,you could use `Consolas`,a premium commercial font which is often bundled with Microsoft applications.Do not use,I would prefer to have consistency across platforms rather than have something where you are depending on `Microsoft`.
+
+There are many blog posts and hopefully `flame wars` about this,so to the `Internet` folks.

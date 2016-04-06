@@ -1,0 +1,44 @@
+---
+title: Linux Configuration Paths
+notebook: vamsiampolu's notebook
+tags:linux, productivity
+---
+
+**Important files in /etc**
+
+|File name|Description|
+|------------|--------|
+| aliases| Aliases for use with `SendMail` or `Postfix`,they map usernames to actual users|
+| apache|  Config files for `Apache` web server|
+| bashrc|  The system wide configuration for `BASH`,contains `aliases` and `functions` for all users|
+| crontab and cron.*| Configures tasks that need to be executed periodically|
+| default| `default` options for certain tasks|
+| filesystem| known filesystems like ext4,ntfs et.al|
+| fstab| config for partitions and their mount points|
+| ftp*| config of the ftp server,who can connect,who can access...|
+| group| config for maintaining user groups,do not edit manually|
+| hosts| a list of servers to which you can connect manually,without using a DNS resoloution|
+| inittab| information for booting|
+| issue| information about the distribution|
+| ld.so.conf| location of library files|
+| lilo.conf| boot info for `li`nux `lo`ader,has been replaced with `grub`|
+| logrotate.*| rotation of the logs,prevents collection of huge amounts of log files|
+| mail| directory containing instructions for the behaviour of the mail server|
+| modules.conf| configuration of modules to enable special features|
+| motd| Message of the day,used by the `sysadmin` to show messages about system maintainance|
+| mtab| Currently mounted file systems,never edit this file |
+| nsswitch.conf| order in which to contact resolvers when process asks for host name resolution |
+| pam.d| configuration of authentication modules|
+| passwd| lists local users,do not edit manually|
+| printcap| outdated but still frequently use printer configuration|
+| profile| system wide configuration for shell environment,default properties of new files,limitations,variables etc|
+| rc*| Directories defininig active services for each run level|
+| resolve.conf| order in which to contact dns servers|
+| sendmail.cf|mail config for sendmail server|
+| services| connections accpted by the machine|
+| sndconfig or sound| configuration of sound card and sound events|
+| ssh| config files in the dir are for secure shell client and server|
+| sysconfig| directory containing system configuration files:mouse,keyboard,power nanagement etc|
+| X11| settings for the graphical server,also contains general directions for window managers|
+| xinetd or inetd.conf| configuration files for Internet Services run for System's internet services deamon|
+

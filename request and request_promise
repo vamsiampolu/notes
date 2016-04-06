@@ -1,0 +1,32 @@
+**request module**
+
+Making a request to a server using the npm module request by Mikael Rodgers.
+
+**A simple GET request**
+
+For a simple get request,use it like this:
+
+	request
+		.get('https://www.modulus.io',
+			function(error,response,body){
+			//the response is of type http.incomingMessage
+			//body is the one we are interesting,it changes depending
+			//on the data...
+	});
+
+It can detect if a request needs to be made over `http` or `https`...
+
+There are methods for common HTTP methods
+
+1. get
+
+2. put
+
+3. post
+
+4. delete
+
+5. patch
+
+
+

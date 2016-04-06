@@ -1,0 +1,34 @@
+---
+title: Linux Device Names
+notebook: vamsiampolu's notebook
+tags:linux, productivity
+---
+
+**Linux Device Paths**
+
+|Name|Description|
+|----|-----------|
+| cdrom| cd drive|
+| console| special entry for the currently used console|
+| cua*| Serial ports|
+| dsp*| Ports for recording and mixing|
+| fd*| Ports for floppy drive|
+| hd[a-t][1-16]|Standard support for IDE drives with support for maximum number of partitions|
+| ir*| Infrared devices|
+| js*| Joysticks|
+| lp*| Printers|
+| mem| Memory|
+| midi*| midi player|
+| mixer* and music| Ideal model of a mixer|
+| modem| modem|
+| mouse| any mouse|
+| null| bottomless garbage can|
+| par*| entries for parallel port support|
+| pty*| pseudo terminal|
+| radio*| For radio ameteurs|
+| ram*| boot device|
+| sd*| SCSI disks with partitions|
+| synthesizer| for audio applications using synthesizer feature of device|
+| tty*| For virtual consoles simulating vt100 terminals|
+| usb*| USB card and scanner|
+| video*| For use with graphics card supporting video|

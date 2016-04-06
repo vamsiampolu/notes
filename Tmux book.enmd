@@ -1,0 +1,798 @@
+*Tmux: Mouse Free Productivity Enviroment
+
+**Chapter 1**
+---
+
+**Starting tmux:**
+
+	$ tmux
+
+This is the simplest way to start `tmux`. This creates a new tmux session.To close this session and return to your existing terminal:
+
+	$ exit
+
+Unless you are using tmux for a short period of time,you will want to create named sessions,in order to do so,use either:
+
+1. the long version of the command:
+
+	tmux new-session -s vulkan
+
+2. the short version of the command:
+
+	tmux new -s vulkan
+
+**Attaching and Detaching to Tmux sessions:**
+
+When you detach from a regular terminal everything inside the terminal is destroyed,however when you attach or detach from a tmux session,you find that the programs in the session keep running in the background and you can attach and detach from the session at will.
+
+1. create a new session
+
+2. to detach from a session:
+
+	Ctrl + B , D
+
+3. to list all sessions:
+
+	1. long version of command:
+
+		tmux list-sessions
+
+	2. short version of command:
+
+		tmux ls
+
+4. attach to a session:
+
+	1. if there is only a single session:
+
+		tmux attach
+
+	2. if there are multiple sessions:
+
+		tmux attach -t session_name
+
+**Kill Sessions**:
+
+To stop all programs running inside a session and to stop the session,use this command:
+
+	tmux kill-session -t basic
+
+If no sessions are running,`tmux ls` causes an error.
+
+**Tmux Windows:**
+
+It is possible to run multiple commands in a `tmux session`,in order to do this,we use `windows`,no not the OS,but a concept in tmux.
+To create a new window in tmux,use the following command:
+
+1. create a named session with a title name:
+
+	tmux new -s windows -n shell
+
+`-n` tells `tmux` to name the first window shell.
+
+To create a window within this session:
+
+	Ctrl + B , C
+
+To rename a window:
+
+	Ctrl + B, ,
+
+In the prompt,rename the window as required.Naming your windows is very important,lest you have too many anonymous windows which you are trying to search through.
+
+***Moving between windows:
+
+To go to the next window:
+
+	Ctrl + B, N
+
+To go to the previous window:
+
+	Ctrl + B, P
+
+TO go to any window between 0-9:
+
+	Ctrl + B, n 
+
+where `n` is the number of the window.Notice that the index start from 0 and not one.
+
+To find a window by name:
+
+	Ctrl + B, f
+
+To get an interactive menu of windows:
+
+	Ctrl + B, w
+
+To close a window:
+
+	1. type `exit` into the prompt
+
+	2. type: `Ctrl + B, &`
+
+The second option closes the prompt with a confirmation message before closing.
+
+^**(w+s*)+**:
+
+First lets start by creating a session with a window:
+
+	tmux new -s panes -n panes
+
+To create a pane that splits the window vertically:
+
+	Ctrl + B, %
+
+To create a pane that splits the window horizontally:
+
+	Ctrl + B, "
+
+To cycle between panes,use:
+
+	1. Ctrl + B , o 
+
+	2. Ctrl + B, <arrow-key>
+
+To change the pane layout to a prefix setting:
+
+	Ctrl + B , spacebar
+
+There are 5 main prefix settings:
+
+	1. even-horizontal: stacks all panes vertically left-->right
+
+	2. even-horizontal: stacks all panes horizontally top --> bottom
+
+	3. main-vertical: creates one large pane and two smaller panes underneath
+
+	4. main-horizontal: creates one large pane on the left and two smaller panes on the right
+
+	5. tiled: arranges all panes evenly on the screen
+
+**Closing panes in tmux:**
+
+To close a pane,you can either use:
+
+	1. Ctrl + B, X (you will be prompted and then exit)
+
+	2. type `exit` in the prompt.
+
+**Command mode:**
+
+I know that you think that `tmux` is the greatest thing since sliced bread,but it gets better,`tmux` has a command mode.To enter the command mode,press `:`.
+
+To create a new window from the command mode:
+
+	new-window -n basic
+
+To create a new window while running a default command:
+	
+	new-window -n processes "top"
+
+Here we run the top command by default,there is a problem with this.If you exit the default command,the tmux window will also close along with it.There are ways of getting around this,however it is recommended that you create a new named window and use it to run whatever command you would like.
+
+---
+
+To get the list of keybindings in the tmux window:
+
+	Ctrl + B, ?
+
+**Chapter 2**
+
+---
+
+**Configuring tmux:**
+
+To configure tmux you should create a tmux conf file:
+
+	touch ~/.tmux.conf
+
+The author suggests remaping the Caps Lock key to the Ctrl key but I would be hesitant to do it because the Ctrl + A is pretty accessible as it is.
+
+In the `.tmux.conf` file,write:
+
+	set -g prefix C-a
+
+`-g` sets the option for all tmux sessions we create i.e. globally
+
+Then remove Ctrl+B,free it up:
+
+	unbind C-b
+
+Tmux adds a small delay when sending commands,this can affect other programs,such as vim:
+
+	set -sg escape-time 1
+
+Tmux uses `0` as the index of the first window,this is not good,lets change it to 1.
+
+	set -g base-index 1
+
+Similarly,you can change the `pane-base-index` to `1`.
+
+	set -g pane-base-index 1
+
+Now,we can define configurations for some of the most used tmux commands
+
+To reload the source file:
+
+	bind r source-file ~/.tmux.conf \; display "Reloaded"
+
+`bind` allows us to specify a key we would like to use followed by the command we want to execute. To specify multiple commands for the same binding seperate them by \;	
+
+The `display` command is used to display a message in the status line of `tmux`.To use this option,I can press `Ctrl + A, R`.
+
+
+Some applications like `vim`,`emacs` and even the regular bash use `Ctrl + A`,you can press `Ctrl + A` twice to allow these applications to use the key combination with:
+
+	bind C-a send-prefix
+
+To `tmux`,creating a vertical split means creating a new pane under the existing pane and a horizontal split means creating a new pane to the left of existing pane:
+
+	bind | split-window -h
+	bind - split-window -v
+
+To remap the keys to use `h,j,k,l` ala `vi` style to navigate between panes save yourself some time of using `arrow keys`.
+
+	bind h select-pane -L
+	bind j select-pane -D
+	bind k select-pane -U
+	bind l select-pane -R
+
+The author also wants to remap the code for cycling through windows like this:
+
+	bind -r C-h select-window -t:-
+	bind -r C-l select-window -t:+	
+
+There is also a remapping configuration for resizing panes:
+
+	bind -r H resize-pane -L 5
+	bind -r J resize-pane -D 5
+	bind -r K resize-pane -U 5
+	bind -r L resize-pane -R 5
+
+Here,you need to use `shift` and then press the key,tmux allows uppercase key binding too.`r` option,provides for the use of reusable binding,you start by using `prefix` followed by the key,you can repeat the action thereafter by just pressing the key without the `prefix`,there is a delay of 500ms between actions.
+
+Finally,you can optionally enable the mouse in `tmux` but remember,the mouse is not an ally,it will just slow you down.
+
+	setw -g mouse-mode on
+	set -g mouse-select-pane on
+	set -g mouse-resize-pane on
+	set -g mouse-select-window on
+
+The author recommends turning the mouse mode off using:
+
+	setw -g mouse-mode off
+
+
+Add some visual styling to your `tmux`:
+
+	set -g default-terminal "screen-256color"
+
+You can change the colors of tmux to make it look beautiful:
+
+1. change the status line:
+
+	set -g status-fg white
+	set -g status-bg black
+
+This will create a terminal where the statusline has black background with white text(adjusted for solarized ofcourse)
+
+2. change the window list colors:
+
+	setw -g window-status-fg cyan
+	setw -g window-status-bg default
+	setw -g window-status-attr dim
+
+	1. style the active window status:
+
+		setw -g window-status-current-fg white
+		setw -g window-status-current-bg red
+		setw -g window-status-current-attr bright
+
+3. style the pane colors:
+
+	set -g pane-border-fg green
+	set -g pane-border-bg black
+	set -g pane-active-border-fg white
+	set -g pane-active-border-bg yellow
+
+4. styling the command area colors:
+
+	set -g message-fg white
+	set -g message-bg black
+	set -g message-attr bright
+
+***Changing the actual status line:
+
+`tmux` and by extension,all `GNU` tools seem highly configurable,even the freaking status line is configurable.
+Use these variables to configure the status line:
+
+|  Variable    |Description                                       |
+|--------------|--------------------------------------------------|
+| *H           | 		hostname of local host                    |
+| *h           | 		hostname of local host without domain name|
+| *F           | 		current window flag                       |
+| *l           | 		current window index                      |
+| *P           | 		current pane index                        |
+| *S           | 		current session name                      |
+| *T           | 		current window title                      |
+| *W           | 		current window name                       |
+| **           | 		a literal *                               |
+| *{shell command}|	first line of shell command's output          |
+| *[attributes]	  |	color or attribute changes                    |
+    
+The author uses this configuration,he displays the session name in green,window index in yellow,pane index in cyan.
+
+
+	set -g status-left-length 40
+	set -g status-left "*[fg=green]Session: *S *[fg=yellow]*I *[fg=cyan]*P"
+
+On the right side,configure the time and date,get the battery status in the future...
+
+	set -g status-right "*[fg=cyan]%d %b %R"
+
+Turn on utf-8 support for the status line using:
+
+	set -g status-utf8 on
+
+By default `tmux` refreshes the status bar every 15 sec,we want to do it once every 60 sec:
+
+You can create a custom development environment that suits your application using tmux's client server model.The key to accomplishing this is the `-t` flag available on tmux.
+
+	set -g status-interval 
+To justify the window list:
+
+	set -g status-justify centre
+
+To monitor activity occuring in background windows:
+
+	set -g monitor-activity on
+	set -g visual-activity on
+
+Until this point,we have created a user configuration,if you would like to configure a system wide configuration for all users,you can do so in `/etc/tmux.conf`.
+---
+
+**Interlude**
+
+I have found that the tmux zsh plugin allows us to reconnect to existing session which is amazing
+
+
+**Chapter 3**
+---
+
+You can create a custom development environment that suits your application using tmux's client server model.The key to accomplishing this is the `-t` flag available on tmux.
+
+To create the environment of your dreams,start by creating a new file which you can repeatedly invoke in order to obtain the environment of your choice:
+
+	touch ~/development_node
+	chmod a+x ~/development_node
+
+In the file,start a session,switch to your project directory:
+
+	tmux new-session -s development -n editor -d
+
+The -d is to immediately detach from the session as soon as it is created.Now we would like to switch to our default project:
+
+	tmux send-keys -t development 'cd ~/devProject' C-m
+
+C-m represents the carraige return sequence which ends a line. If you use a text editor like `vim` that runs within your terminal,you can invoke it like this:
+
+	tmux send-keys -t development 'vim' C-m
+	tmux split-window -v -t development 
+	tmux select-layout -t development main-horizontal
+
+Here,we opened vim,split the window to have a terminal at the bottom and modified the layout to have one large pane and two small panes underneath.You can target windows and panes using tmux like this:
+
+	tmux send-keys -t development:1.2 'cd ~/devProject/test' C-m
+
+To target a particular pane,use `session:window_index.pane_index` syntax with -t option.You can create a new-window,select a window,attach to the session:
+
+	tmux new-window -n console -t development
+	tmux send-keys -t development:2 '~/devProject' C-m
+	tmux select-window -t development:1
+	tmux attach -t development
+
+Run your script with
+
+	~/development
+
+However,there are a few issues with this:
+
+1. what if the session already exists
+
+2. what if the path to your dev directory needs to be dynamic.
+
+You could solve these using some `bash` scripting magic:
+
+	tmux has-session -t development
+	if [$? != 0]
+	then
+		tmux new-session -s development ...
+		....
+		....
+	fi
+	tmux attach -t development
+
+**Using a tmux configuration for your setup:**
+
+You can include a configuration with tmux when you invoke it from your terminal using the `-f` argument.
+Create an `app.conf` for your project:
+
+	source-file ./.tmux.conf
+	...
+	...
+	...
+
+Followed by your regular configuration.
+
+To use this config:
+
+	tmux -f app.conf attach
+
+You need to use the `attach` keyword there because tmux runs with new-session whenever it starts if nothing else is specified.
+
+**Using tmuxinator:**
+
+Using `tmux` configuration files for your project is well and good,however you can use `tmuxinator`,a`ruby` gem to make it happen.
+Unless you are using `ruby` for regular tasks,use `rvm` to install ruby.
+
+Tmuxinator needs the `$EDITOR` shell environment variable to be set.You can do it from your `.bashrc` file.	You can just do this instead:
+
+	export EDITOR=vim
+
+Now install `tmuxinator`:
+
+	gem install tmuxinator
+
+To open your config:
+
+	tmuxinator open development
+
+This dispays the default project configuration in the editor set to $EDITOR.The default configuration is suitable for RoR developers.
+It might look something like this:
+
+project_name: Tmuxinator
+project_root: ~/code/rails_project
+socket_name:foo *remove,not needed if using default socket
+rvm:1.9.2@rails_project
+pre: sudo /.etc/rc.d/mysqld start
+tabs: 
+	- editor:
+		- layout: main-vertical
+		- panes:
+			- vim 
+			- *empty,this will run plain bash
+			- top
+	- shell: git pull
+	- database: rails db
+	- server: rails s
+	- logs: tail -f logs/development.log
+	- console: rails c
+	- capistrano: 
+	- server2: ssh me@myhost
+
+tmuxinator makes it trivial to define windows and panes and the commands you want them to run.One more thing,tmuxinator uses yaml for configuration,so it is really important to ensure that you are formatting correctly.
+
+To run the tmuxinator config,use:
+
+	tmuxinator devproject
+
+All tmuxinator scripts live in the `~/.tmuxinator` folder.
+
+Here,are a few tmuxinator commands:
+
+|Command|Description                        |
+|:--------------------------:|:---------------------------:|
+|   tmuxinator open [name]   |      opens a configuration,creates a configuration if it does not exist.|
+|   tmuxinator name          |      attaches to a session with provided config,if session does not exist,creates one|
+|   tmuxinator list          |      lists all current projects|
+|   tmuxinator copy [src] [dest]|   copies a project configuration|
+|   tmuxinator delete name|         deletes a specific configuration|
+|   tmuxinator implode|             deletes all configurations|
+|   tmuxinator doctor|              looks for problems with tmuxinator and system config|
+
+
+**Using tmux to copy paste**
+
+
+**Multiple buffers**
+
+tmux has multiple copy buffers,by default,when in copy mode when using `Space` selects the text,move the cursor to the end of selection and press `ENTER`.The selected text is copied into a copy buffer.
+
+To paste the contents,switch to `Copy mode` and press `Ctrl + A, ]`.
+
+`tmux` has a shortcut to copy the entire visible contents of a pane:
+
+1. use Ctrl+A, : to enter command mode
+
+2. type `capture-pane`
+ 
+To view the contents of a buffer use:
+
+1. use from terminal
+
+	tmux show-buffer
+
+2. use from `command mode`
+
+	show-buffer
+
+To copy the contents of a pane to a file:
+
+1. use from terminal
+
+	tmux capture-pane && tmux save-buffer buffer.txt
+
+2. use from command mode:
+
+	capture-pane;save-buffer buffer.txt
+
+Whenever you copy something,`tmux` creates a new buffer,`Ctrl + A, ]` always pastes the buffer 0.You can select a buffer to paste
+using `command mode`.Type:
+
+	choose-buffer
+
+to get a list of available `paste-buffers`,choose one and press `ENTER`.
+
+**Vi mode**
+
+tmux has a `copy mode`,it is available when you press the `Ctrl + A, [` keys.You can use the arrow keys to move around.
+You can use a `vi` based copy mode instead of the regular copy mode by configuring it like this:
+
+	setw -g mode-keys vi
+
+To exit the copy mode,just press `ENTER`.
+
+You can rebind the copy keys in `tmux` to suit a more `vi` style that you might be familiar with:
+
+	unbind [
+	bind Escape copy-mode
+	unbind p
+	bind p paste-buffer
+	bind -t vi-copy 'v' begin-selection
+	bind -t vi-copy 'y' copy-selection
+
+
+When in the copy mode,you can use the following keys to navigate around:
+
+	h,j,k,l for navigation
+	w - jump forward one word
+	b - jump back one word
+	f - jump forward to the same charecter on the line
+	F - jump backward to the same charecter on the line
+
+	*f,F work well only when they are followed by a charecter.
+
+	Ctrl-b to move down one page of bufferred output
+	Ctrl-B to move up one page of buffered output
+	g to jump to the top of the buffer history
+	G to jump all the way to the top of the buffers history
+
+	? searching upwards in a buffer in copy mode
+	/ searching downwards in a buffer in copy mode
+
+When searching through the buffer just type one of these keys,specify the query and press `ENTER` to reach the first value.
+Now you can press `f` and `F` to move to the next search result.
+
+**Integration with System clipboard**
+
+Install `xclip`:
+
+	sudo apt-get install xclip
+
+We can now use `tmux` copy and paste commands from system into tmux:
+
+	bind C-c run "tmux save-buffer - | xclip -i -sel clipboard"
+	bind C-v run "tmux set-buffer \"$(xclip -o -sel clipboard)\";tmux paste-buffer"
+
+Having `tmux` on your server is a very good idea because we can use it to get the ability to create paste-buffers where none is available.
+
+**Tmux for pair programming**
+
+Using Skype,GotoMeeting,Hangouts is not very conducive to pair programming,you could instead use the built in tmux sockets in order to pair program with your significant other(his/her code completes yours).
+
+There are three ways of working with others using tmux:
+
+1. setup a shared account that you and the user can share
+
+2. use tmux sockets to provide access to the user without having to setup a new user account.
+
+The above two approaches have an inherent weakness that they provide the user with potential access to files that you might not want to give them access to.
+
+3. Setup your development environment using tools like VirtualBox and Vagrant and only provide access to that workspace.
+
+**Pairing with a shared account**
+
+This is considered the simplest way to share something with a different user.Enable `ssh access` on the machine that acts as the `host`.
+The second user logs in with the same user account and attaches to the session.The use of public ssh keys makes the login process a little more transparent.
+
+Create a new user and switch to the user:
+
+	$ adduser tmux
+	$ su tmux
+
+The user does not have to be named tmux,but it would be a good idea to have a user called tmux who provides access to tmux.We would like to create ssh keys from developers to provide them with access to the system,in order to do that setup the `~/.ssh/authorized_keys`.
+Ensure that when setting up permissions,only the tmux user can read,write and execute the file.
+
+	$ mkdir ssh
+	$ touch ./ssh/authorized_keys
+	$ chmod 700 ssh
+	$ chmod 600 ./ssh/authorized_keys
+
+We shall transfer the public keys to the server and add these files to the authorized_keys for every user.
+From your local machine,you should:
+
+	$ scp -p id_rsa.pub tmux@puzzles.local
+
+From your server:
+
+	$ cat id_rsa.pub ./ssh/authorized_keys
+
+Then you create the session on the server,other team members `ssh` into the remote box and start using the session you asked them to.
+
+Two people might have different needs,they might love different tools or they might just want to try something.There is a way around this with tmux:
+
+Create a session:
+
+	$ tmux new -s groupedsession
+
+The user connects and attaches to the session like this:
+
+	$ tmux new-session -t groupedsession -s newsession
+
+This will look like the user has connected to the same session that you have,however the other user can create new windows,when they do so  they appear in the status bar but you stay in the same window.Thus is rather cool,I believe.
+
+The second user can kill his/her session and the initial session will still continue to exist,which is just amazing,this means that users can come in and leave at any given moment.
+
+**Pairing with seperate accounts and sockets**
+
+On the server,create multiple users:
+
+	$ sudo adduser ted
+	$ sudo adduser barney
+	$ sudo addgroup flintstones
+	$ sudo mkdir /var/tmux
+
+
+We can add the users to the user group:
+
+	$ sudo usermod -aG flintstones ted
+	$ sudo usermod -aG flintstones barney
+
+We create multiple users,a user group and create a `/var/tmux` folder.Now change the ownership of the folder we just created to be the group we just created.
+
+	$ sudo chgrp flintstones /var/tmux
+
+Now alter the permissions so that all new files will be accessible to all the users:
+
+	$ sudo chmod g+ws /var/tmux
+ 
+To create a session,use the `-S` instead of `new` or `new-session` in order to create a new-session without using the default socket location which is inaccessible.
+
+	$ tmux -S /var/tmux/pairing
+
+Attach to the session using:
+
+	$ tmux -S /var/tmux/pairing attach
+
+You can install stuff on a `VPS` and use nothing but an `iPad` with a bluetooth keyboard to hack on code all day. 
+
+**Workflow**
+	
+Some common and uncommon configurations with `tmux`,extending tmux with external scripts,create key bindings that execute several commands.
+
+**Working effectively with panes and windows:**
+
+To turn a pane into a window,use:
+
+	Ctrl + A,!
+
+To turn a window into a pane,use:
+
+Use the `join-pane` command to do this,an essential use case would be to move panes from one session to another.
+
+	join-pane -s 1
+	join-pane -s 1.1
+	join-pane -s panes:1.1
+
+Here,`-s` is used to specify the target of the command,that is here,we say take the window `1` and join it to the current window,This command can be used for moving panes around too,to move a pane within the same session around,use the second command,you can move panes between sessions using the third command.
+
+**Maximising and restoring panes**
+
+To maximise a pane,you will create a new window in the background,swap the pane of that window with the pane you are currently in and finally display the window.To snap the pane back into place,you can reverse the whole process,first you swap the pane in the window with the new pane in the window,then remove the new window.
+
+These actions have been bound to the Up and Down arrow key for conveniance by the author.
+
+	unbind Up
+	bind Up new-window -d -n tmp \; swap-pane -s tmp.1 \; select-window -t tmp
+	unbind Down
+	bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
+
+**Moving between sessions**
+
+To move between sessions,the default shortcuts are:
+
+	Ctrl + A, (
+	Ctrl + A, )
+	
+To get a list of all existing sessions,use
+
+	Ctrl + A, s
+
+The default bindings are:
+
+	bind -r ( switch-client -p
+	bind -r ) switch-client -n
+
+
+The author recommends,a dynamic version of this `shell script` which uses `has-session` to obtain a `boolean`.
+
+	if tmux has-session server ; then
+		exec tmux new -s development -d
+	fi	
+
+	exec tmux attach -t development
+
+**Moving windows between sessions**
+
+Use `Ctrl + A, .` and type the name of the session and the window in the tmux command line.If a session has only one window,you can specify the name of the session,in this specific case,your session from which the window has been moved will auto-close because it has no window.
+
+**Using with zsh**
+
+To launch with `zsh`, within the `.tmux.conf` file,specify:
+
+	set -g default-command /bin/zsh
+	set -g default-shell /bin/zsh
+
+**Battery status**
+
+To add the battery status,download the following `dotfile`:
+
+	wget --no-check-certificate \
+	https://raw.github.com/richoH/dotfiles/master/bin/battery
+
+	chmod a+x ~/battery
+
+To check the status of the battery while it is discharging,use:
+
+	~/battery Discharging
+
+To check the same,while charging:
+
+	~/battery Charging
+
+Now,we can add this to our `tmux` status bar,to run a command and display the result in the statusbar, use `#{commaand}`.
+
+	set -g status-right #{~/battery Discharging} | #[fg=cyan]%d %b %R
+
+**Launching tmux by default**:
+
+In your `default shell` configuration file,paste this to start `tmux` by default:
+
+	if [[ "$TERM" != "screen-256color" ]]
+	then
+	tmux attach-session -t "$USER" || tmux new-session -s "$USER"
+	exit
+	fi
+
+When `tmux` runs it sets the `TERM` variable to `screen`,we changed that to `screen-256color` when creating our config.
+If the variable is not set,attach to a session created with the user name,if no such session exists `bash` will throw an error,this error is interpreted as false,which will lead to the creation of a new session with the username.
+
+Be careful,opening a new terminal window will always attach to the same session,typing exit in any terminal window will close all terminal windows.That is to say,beware of quirks,I am not using this trick.
+
+**Recording log to a file**
+
+Capture the output of a pane to a file while it is running using `pipe-pane`,this is similar to the `script` command in various other shells,but this can be turned on and off at will.The `-o` in the command below means that the same thing can be used to turn the command off at a later time.
+
+	pipe-pane -o hello.txt
+
+To make this much easier to use bind this to the shortcut `Ctrl + A, P`  in the `.tmux.conf` file:
+
+	bind P pipe-pane -o "cat >>~/#W.log" \; display "Toggled logging to ~/#W.log"
+---
+Sane scolling on `tmux`:
+
+You can enable `Shift + PageUp` and `Shift + PageDown` in tmux using this config:
+
+	# Sane scrolling
+	set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+---	

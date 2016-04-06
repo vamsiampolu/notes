@@ -1,0 +1,30 @@
+**Sublime Text Tips and Tricks**
+
+To switch between tabs without using a mouse,there are two different ways:
+
+1. to go to next view in stack use `Ctrl + Tab`
+
+2. to go to the previous view in stack `Ctrl + Shift + Tab`
+
+This will not navigate the tabs as you see them,it instead takes you to the last opened view,the one you opened before that and the one you opened before that,it is a stack...get it!!!
+
+To switch between tabs in a more predictable way where each keybinding takes you to the tab next/before the tab regardless of what was previously open,just:
+
+1. to go to the next tab `Ctrl + Page-Up`
+
+2. to go to the previous tab `Ctrl + Page-Down`
+
+To switch between files,use `Ctrl` + `P`.To navigate to various symbols when working on a large file,use `Ctrl` + `R`.To search through an entire project use `Ctrl` + `Shift` + `R` .
+
+To edit in multiple places at the same time,
+
+1. `Ctrl` + `Click`
+
+2. `Ctrl` + `d` 
+
+3. `Ctrl` + `Shift` + `F` and `Alt` + `Enter` 
+
+The first option allows you to place a cursor anywhere you like,the second one is all about placing another cursor at the next occurance of the same word,the last one is all about finding all the occurances of a word and selecting them.
+
+Save projects using the command palette and switch between them at the drop of a hat using the `Ctrl` + `Alt` + `P` command.
+

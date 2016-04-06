@@ -1,0 +1,80 @@
+**Learning vi**
+
+In `Unix` land there are several text editors,some of them like `ed` and `ex` are referred to as `line` editors while there are screen editors such as `vi` and `emacs`.`vi` has survived unchanged from `unix` to the modern day and is considered a lingua franca for text editors.
+
+To begginers `vi` looks cumbersome,it uses regular keys to issue commands in a command mode,it needs to be in an insert mode before you can type anything in.When you learn `vi` you will learn its power and will be able to issue shortcuts to transfer the burden of doing many different things to the computer.
+
+`vi` is not a `WYSIWIG` editor,if you want to produce some standard documents,you will have to type in codes understood by a different program,you can use the `troff`,`nroff` and `groff` programs or you could use `tex` and `latex` typesetting tools.
+
+Unlike many editors,here the command mode is the default mode,you can use it to make complex edit functionality using just a few keystrokes.You can use basic letters as the commands such as:
+
++ i for inserting
++ cw for changing a word
+
+Using letters as commands means that you do not have to reach for awkward shortcuts or mess around with multiple levels of menus,you dont even have to leave your keyboard to make things happen.In general vi commands:
+
+1. are case sensitive
+
+2. not echoed on the screen
+
+3. do not require `ENTER` to be typed after the keys.
+
+To use search commands `/` and `?` are used,to use `ex` commands,use `:`.`ex` is the editor behind everything,`vi` just provides a visual mode on top of `vi`.
+
+`vi` was developed when `UNIX` was very new,it still uses `term`,`termcap` and `terminfo` variables to determine the terminal,it still heeds the `stty` settings.There will thus be cryptic errors,be prepared.
+
+To open a file using `vi` type
+
+	vi filename
+
+at the terminal prompt,you can specify a new file or you can ask vi to edit an existing text file.
+
+By default,vi opens the command mode,the file shows up with `tildas` if it is a new file,It means that the file does not have any data,not even empty lines.
+
+To insert data into a file,use `i` to enter the insert mode and to return to the command mode use `ESC`,if you press `ESC ` again when you are in command mode,you will find that `vi` beeps at you,as a result command mode is known as `beep mode`.
+
+Use `ZZ` to save and quit your files,you can also use `ex`  commands to accomplish the same thing,`:w` saves the file,`:q` quits the file.You can combine them and use `:wq` in order to save a file and quit.This is equivalent to using the `ZZ` command described above.Use `:e! ENTER` to remove edits from files to return to the last saved state.To quit use `:q! ENTER`,this will exit `vi` and return you to the Unix prompt.`vi` usually will not allow you to throw away any edits,use the `!` in order to override this prohibition,performing the operation even though the buffer has been modified.  
+
+**Simple Editing**
+
+You cannot learn `vi` by learning every single `vi` command.You can observe the pattern of use with each group of commands.`vi` has so many options for editing that it might be difficult for newbies to learn.
+
+As discussed earlier `vi` has two different modes,`command` mode and `insert` mode.Think of these as two different keyboards,in the first you can use each key to specify a new instruction.When a file is loaded,it starts out in `command` mode,to enter insert mode press `i`,to stop editing and enter command 
+mode press `ESC`.
+
+---
+
+An interlude: Info from the Linux TLDP book is presented here.
+
+To remove text:
+
+	n dd
+	n dw
+	x
+
+`n dd` removes `n lines` starting from cursor position.`n dw` removes n words 
+starting from the current cursor position.The `x` command removes a charecter on which the cursor is positioned.
+
+To goto a line use `:n` 
+
+Insert modes,there is more than just one mode to do things:
+
+|Mode|Description|
+|:---:|:---------------:|
+|i|Switches to insert mode|
+|a|Adds a charecter after cursor position and switches to insert mode|
+|o|Will insert a line under cursor position and move cursor to the line|
+
+Searching for a string is also much easier,just type:
+
+	/str
+
+where `str` is the string you are searching for...this will search and position the cursor at the first search result.To move to the next search result use `/`.
+
+Thats it,no complicated Ctrl + F.
+
+Finally to recover a file after an accidental shut down,use `:recover`.
+
+There is a built in tutorial for learning vim called `vimtutor`. It copies the original vimtutor file and allows you to learn using that.
+
+---

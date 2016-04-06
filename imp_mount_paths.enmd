@@ -1,0 +1,27 @@
+---
+title: Linux-Important Mount Paths
+notebook: vamsiampolu's notebook
+tags:linux, productivity
+---
+
+|Directory|Content|
+|------|-------|
+| /bin | Common programs shared by the sysadmin and the users|
+| /boot| The startup files,vmlinuz i.e the kernal and sometimes the grub data|
+| /dev | Consists of special files representing cpu peripheral hardware|
+| /etc | Most important configuration files are in /etc,similar to Control Panel|
+| /home| Home directory of the common users|
+| /initrd | Used to contain some booting information,used by some distributions|
+| /lib | library files,includes files for all kinds of files required by the system|
+| /lost+found| every partition has a lost and found,any files lost during a failure can be found here|
+| /misc | for mischellenous purposes|
+| /mnt | standard mount point for external file systems|
+| /net | standard mount point for remote file systems|
+| /opt | contains extra and third party software|
+| /proc | a virtual file system containing information about system resources|    
+| /root | the sysadmin's root directory|
+| /sbin | programs for use by the system and sysadmin only|
+| /tmp | temporary space used by the system,cleaned up after reboot, do not save work here|
+| /usr | programs,libraries and documentation for all user related programs|
+| /var | storage for all temporary files stored by the created by the user|
+
