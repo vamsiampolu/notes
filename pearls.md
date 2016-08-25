@@ -7,3 +7,8 @@ git config --global credential.helper 'cache --timeout=3600'
 
 Will store your github username and password in cache for an hour.
 
++ Push to same branch on github:
+
+```
+git config --global push.default matching
+```
