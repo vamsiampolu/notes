@@ -84,4 +84,20 @@ source.addEventListener('specificMessage',handleSpecificMessage,false)
 If a message is sent with an event of `specificMessage` on the server, it can be handled by the latter and
 if no event is used, it is handled by the former.
 
+An example can be found [here](https://github.com/vamsiampolu/sse-rawhttp)
+
+It is based on the [blog post](http://cjihrig.com/blog/server-sent-events-in-node-js/)
+
+---
+
+**References**
+
+1. http://cjihrig.com/blog/server-sent-events-in-node-js/
+
+2. http://cjihrig.com/blog/the-server-side-of-server-sent-events/
+
+3. http://streamdata.io/blog/server-sent-events/
+
+4. http://streamdata.io/blog/push-sse-vs-websockets/
+
 ---
