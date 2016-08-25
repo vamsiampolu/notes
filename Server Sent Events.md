@@ -17,20 +17,35 @@ from the server.
 
 How?
 
-Each messagge consists of
+To setup, the server should respond with `headers`:
 
 ```
-id
-retry
-event
-data
+Content-Type: text/event-stream
+Cache-Control: no-cache
+Connection: keep-alive
 ```
+
+when the client requests the event stream.
+
+
+Each message is represented by plain text and can consist of:
+
+```
+id:
+retry:
+event:
+data:
+```
+
+Multiple lines are allowed when specifying an `event`. A newline can be used at the end of a line to indicate that
+the message is continued on the next line. To terminate a message use two newline charecters at the end of the line.
+
+If `event` is not specified, the payload is treated as an `unnamed event`.
 
 There can be multiple `data` lines. If `retry` is not specified, a default value of `3 seconds` is used.
 
 During the `reconnection` process, the laat id recieved will be sent back to the server.
 
-On the server side, you just write the messages as `strings`(??)
 
 On the client side, you use an `EventSource`. Events are available for:
 
