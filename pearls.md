@@ -1,4 +1,9 @@
-**Pearls from gitter**
++ Git Credential Helper:
 
-My philosophy on programming is basically the lisp one, except I believe in applying it to every language you write your code in. The built in functions, classes, and operators are the base language. Those combined with whatever features the language offers are just tools we use to build up the language to fit our domain. The original language designers can't foresee all the possible useful abstractions that might be helpful in different parts of different projects in the hands of different people. Even if they could, they can't build them all for us. When you put your main emphasis on leveraging every language feature at your disposal, completely disregarding if it fits it's intended purpose, to build up the language to your domain, I call this "extreme language hacking". That is my programming philosophy. It allows for a never ending increase in productivity by a single programmer as long as they don't change languages too often. Eventually that one person should be as productive as an average team, and then the can keep improving from there. I believe we should hack our tools in order to achieve this ever increasing productivity as well, not just the languages we write in. I believe in spending 50% of your programming time on improvement. This allows for the most productivity over a period of time. You will be able to get more and more accomplished with that remaining 50% spent working.
+```
+git config --global credential.helper cache
+git config --global credential.helper 'cache --timeout=3600'
+```
+
+Will store your github username and password in cache for an hour.
 
