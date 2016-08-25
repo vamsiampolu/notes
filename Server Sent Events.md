@@ -57,4 +57,31 @@ On the client side, you use an `EventSource`. Events are available for:
 
 and any events you send down from the `server`.
 
+If `EventSource` is not available in your browser(Edge or IE), use the [polyfill](https://github.com/Yaffle/EventSource)
+
++ Step 1: Create the `EventSource`:
+
+```
+source = new window.EventSource('stream')
+```
+
+Now, a `HTTP` request is sent to the server for `/stream`. The server responds with the appropriate mime-type and the `headers`.
+
++ Step 2: setup event handling for the `open` and `error` events
+
+```
+source.addEventListener('open',handleOpen,false)
+source.addEventListener('error',handleError,false)
+```
+
++ Step 3: Once a connection has opened, start listening for generic messages and any specific messages:
+
+```
+source.addEventListener('message',handleGenericMessage,false)
+source.addEventListener('specificMessage',handleSpecificMessage,false)
+```
+
+If a message is sent with an event of `specificMessage` on the server, it can be handled by the latter and
+if no event is used, it is handled by the former.
+
 ---
