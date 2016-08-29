@@ -24,3 +24,12 @@ and replace with quoted key using:
 ```
 "$1":
 ```
+
+Quickly replace a `.` with a `/` in Sublime Text:
+
+```
+Find: (.)?(\w+)
+Replace: /$2
+``` 
+
+> will work with or without a leading `.`
