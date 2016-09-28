@@ -222,3 +222,65 @@ To use the ephemeral volume in another container:
 docker run -ti --volumes-from containerPath ubuntu latest
 ```
 ---
+
+**Creating and sharing images using `Dockerfile`**
+
+This is a simple Dockerfile:
+
+```
+FROM busybox
+#runs in an intermediate container
+RUN echo "building a simple container"
+#runs when the container starts
+CMD echo "hello container"
+```
+
+To build the dockerfile use:
+
+```
+docker build .
+```
+
+Then tag the image:
+
+```
+docker tag containerId imageName
+```
+
+A Dockerfile is built line by line, each line creates a container and an image is built based on the container. This image becomes the base image from which the container on the next line is built.
+
+Docker is memory effecient and shares memory between these intermediate images.
+
++ `FROM` is to use a reference image that you want to use build your image
+
+> usually we use one image and we place the `FROM` at the top of the `Dockerfile`
+
++ `MAINTAINER` is used to specify the name of the maintainer(that's you/me??)
+
++ `RUN` runs a command in a shell and saves the result
+
++ `ADD` can be used to add `local files`,`archives` and `urls` to the container.
+
++ `ENV` sets environment variables that can be used in the Dockerfile and in the container.
+
+> When a container runs, we either use `ENTRYPOINT` or `CMD`.
+
++ `ENTRYPOINT` is used when we know which command should run and only want to allow arguments to be passed to the command.
+
++ `CMD` is used when we want to specify a command but allow the user to replace it with a command of their own choice if needed.
+
++ `EXPOSE` exposes a port on the container
+
++ `VOLUME` can create either a shared volume or an ephemeral volume, in order to create a shared volume, you need to provide two arguments:
+
+```
+VOLUME ["hostPath","containerPath"]
+```
+
+> The above format `[]` can be used with `CMD` as well, this is known as the `CMD` form while just specifying a command is known as the `shell form`.
+
++ `WORKDIR` sets the working directory for the rest of the container and for the container to run `CMD` in.
+
++ `USER` sets the user that the command should run as.
+
+---
